@@ -1,44 +1,21 @@
-import type React from "react";
-import { signUp } from "./auth-client";
-import { useNavigate } from "react-router";
+import { Route, Routes } from "react-router";
+import { Dashboard, Login, Register } from "./pages";
+import { ProtectedRoute } from "./routes/protected-route";
 
 export const App = () => {
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-
-    const { data, error } = await signUp.email({
-      name: form.get("name") as string,
-      email: form.get("email") as string,
-      password: form.get("password") as string,
-    });
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-    console.log(data);
-    navigate("/login", { viewTransition: true });
-    return;
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" />
-      </div>
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" name="password" />
-      </div>
-      <button type="submit">Register</button>
-    </form>
+    <Routes>
+      <Route path="/" element={<h1>Hello World</h1>} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 };
